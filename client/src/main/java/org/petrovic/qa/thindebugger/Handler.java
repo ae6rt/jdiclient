@@ -9,4 +9,6 @@ import com.sun.jdi.event.Event;
  */
 public interface Handler {
     public void handle(Event evt) throws IncompatibleThreadStateException, AbsentInformationException;
+
+    public BreakPointInfo breakPointInfo();
 }

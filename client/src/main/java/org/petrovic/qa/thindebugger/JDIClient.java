@@ -4,7 +4,10 @@ import com.sun.jdi.*;
 import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
-import com.sun.jdi.event.*;
+import com.sun.jdi.event.Event;
+import com.sun.jdi.event.EventIterator;
+import com.sun.jdi.event.EventQueue;
+import com.sun.jdi.event.EventSet;
 import com.sun.jdi.request.BreakpointRequest;
 import com.sun.jdi.request.EventRequestManager;
 
@@ -18,10 +21,10 @@ import java.util.Map;
 public class JDIClient {
     public static void main(String[] args) throws Exception {
         JDIClient jdiClient = new JDIClient();
-        jdiClient.run(args);
+        jdiClient.init(args);
     }
 
-    private void run(String[] args) throws InterruptedException, AbsentInformationException, IOException, IllegalConnectorArgumentsException {
+    private void init(String[] args) throws InterruptedException, AbsentInformationException, IOException, IllegalConnectorArgumentsException {
         if (args.length != 2) {
             System.out.println("Usage:  java JDIDemo debugHost:debugPortNumber className:sourceLineNumber");
             System.exit(-1);
@@ -34,11 +37,15 @@ public class JDIClient {
         String fullyQualifiedClassName = codeLocus[0];
         int lineNumber = Integer.parseInt(codeLocus[1]);
 
-        Bag bag = getLocation(hostName, debugPort, lineNumber, fullyQualifiedClassName);
-        waitForBreakpoint(bag.virtualMachine, bag.location, new HandlerImpl(lineNumber, "msg"));
+        Handler handler = new HandlerImpl(fullyQualifiedClassName, lineNumber);
+        Bag bag = getLocation(hostName, debugPort, handler.breakPointInfo());
+
+        System.out.printf("Waiting for breakpoint at %s\n", handler.breakPointInfo());
+
+        run(bag.virtualMachine, bag.location, handler);
     }
 
-    private Bag getLocation(String hostName, int debugPort, int lineNumber, String fullyQualifiedClassName) throws IllegalConnectorArgumentsException, IOException, AbsentInformationException {
+    private Bag getLocation(String hostName, int debugPort, BreakPointInfo breakPointInfo) throws IllegalConnectorArgumentsException, IOException, AbsentInformationException {
         VirtualMachineManager vmMgr = Bootstrap.virtualMachineManager();
         AttachingConnector socketConnector = null;
         List<AttachingConnector> attachingConnectors = vmMgr.attachingConnectors();
@@ -67,10 +74,10 @@ public class JDIClient {
             List<ReferenceType> refTypes = vm.allClasses();
 
             for (ReferenceType referenceType : refTypes) {
-                if (referenceType.name().equals(fullyQualifiedClassName)) {
+                if (referenceType.name().equals(breakPointInfo.className)) {
                     List<Location> locs = referenceType.allLineLocations();
                     for (Location loc : locs) {
-                        if (loc.lineNumber() == lineNumber) {
+                        if (loc.lineNumber() == breakPointInfo.lineNumber) {
                             breakpointLocation = loc;
                             break;
                         }
@@ -78,14 +85,14 @@ public class JDIClient {
                 }
             }
             if (breakpointLocation == null) {
-                System.out.printf("No breakpoint allowed at %s:%s\n", fullyQualifiedClassName, lineNumber);
+                System.out.printf("No breakpoint allowed at %s\n", breakPointInfo);
                 System.exit(0);
             }
         }
         return new Bag(breakpointLocation, vm);
     }
 
-    private void waitForBreakpoint(VirtualMachine vm, Location breakpointLocation, Handler handler) throws InterruptedException {
+    private void run(VirtualMachine vm, Location breakpointLocation, Handler handler) throws InterruptedException {
         EventRequestManager evtReqMgr = vm.eventRequestManager();
         BreakpointRequest bReq = evtReqMgr.createBreakpointRequest(breakpointLocation);
         bReq.setSuspendPolicy(BreakpointRequest.SUSPEND_ALL);

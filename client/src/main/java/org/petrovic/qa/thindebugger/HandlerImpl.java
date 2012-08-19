@@ -7,12 +7,12 @@ import com.sun.jdi.event.Event;
 import java.util.List;
 
 public class HandlerImpl implements Handler {
-    private final int lineNumber;
-    private final String varName;
+    public final String varName;
+    public final BreakPointInfo breakPointInfo;
 
-    public HandlerImpl(int lineNumber, String varName) {
-        this.lineNumber = lineNumber;
-        this.varName = varName;
+    public HandlerImpl(String className, int lineNumber) {
+        breakPointInfo = new BreakPointInfo(className, lineNumber);
+        this.varName = "msg";
     }
 
     @Override
@@ -21,8 +21,8 @@ public class HandlerImpl implements Handler {
             return;
         }
         BreakpointEvent bpEvent = (BreakpointEvent) evt;
-        if (bpEvent.location().lineNumber() == lineNumber) {
-            System.out.print("Breakpoint at line " + lineNumber + ": ");
+        if (bpEvent.location().lineNumber() == breakPointInfo.lineNumber) {
+            System.out.print("Breakpoint at line " + breakPointInfo.lineNumber + ": ");
             BreakpointEvent brEvt = (BreakpointEvent) evt;
             ThreadReference threadRef = brEvt.thread();
             StackFrame stackFrame = threadRef.frame(0);
@@ -37,5 +37,10 @@ public class HandlerImpl implements Handler {
                 }
             }
         }
+    }
+
+    @Override
+    public BreakPointInfo breakPointInfo() {
+        return breakPointInfo;
     }
 }
