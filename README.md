@@ -18,18 +18,18 @@ Both target app and client debugger are assumed to be running on localhost.
 
 For example, the target app prints this
 
-random: 4890883
-random: -2082873808
-random: 1684298449
-random: -1263057291
-random: -3311150
-random: 350047496
+    random: 4890883
+    random: -2082873808
+    random: 1684298449
+    random: -1263057291
+    random: -3311150
+    random: 350047496
 
 while the debugger client prints this
 
-Breakpoint at line 15: msg = 'random: 4890883'
-Breakpoint at line 15: msg = 'random: -2082873808'
-Breakpoint at line 15: msg = 'random: 1684298449'
-Breakpoint at line 15: msg = 'random: -1263057291'
-Breakpoint at line 15: msg = 'random: -3311150'
-Breakpoint at line 15: msg = 'random: 350047496'
+    Breakpoint at line 15: msg = 'random: 4890883'
+    Breakpoint at line 15: msg = 'random: -2082873808'
+    Breakpoint at line 15: msg = 'random: 1684298449'
+    Breakpoint at line 15: msg = 'random: -1263057291'
+    Breakpoint at line 15: msg = 'random: -3311150'
+    Breakpoint at line 15: msg = 'random: 350047496'
