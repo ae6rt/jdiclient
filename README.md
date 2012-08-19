@@ -19,7 +19,9 @@ Start the client debugger
 
 In a second terminal window, start the debugger:
 
-`java -cp target/thin-debugger-lab-1.0-SNAPSHOT.jar org.petrovic.qa.thindebugger.JDIClient 5050 15 org.petrovic.qa.tdt.App msg`
+`java -cp target/thin-debugger-lab-1.0-SNAPSHOT.jar org.petrovic.qa.thindebugger.JDIClient localhost:5050 org.petrovic.qa.tdt.App:15`
+
+where the arguments are host:port of the remote debugger target, and class:line that specifies the breakpoint.
 
 You should see the target app print its random numbers to the console, and the client debugger print similar output.
 
