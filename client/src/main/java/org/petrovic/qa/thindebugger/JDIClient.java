@@ -43,18 +43,16 @@ public class JDIClient {
             Connector.IntegerArgument portArg = (Connector.IntegerArgument) paramsMap.get("port");
             portArg.setValue(debugPort);
             VirtualMachine vm = socketConnector.attach(paramsMap);
-            System.out.println("Attached to process '" + vm.name() + "'");
-            System.out.println("Attached to description '" + vm.description() + "'");
-            System.out.println("Attached to version '" + vm.version() + "'");
+            System.out.print("Attached to process='" + vm.name() + "'");
+            System.out.print(", description='" + vm.description() + "'");
+            System.out.println(", JVM version='" + vm.version() + "'\n");
 
             List<ReferenceType> refTypes = vm.allClasses();
             Location breakpointLocation = null;
             for (ReferenceType referenceType : refTypes) {
                 if (referenceType.name().equals(fullyQualifiedClassName)) {
-                    System.out.println(referenceType.name());
                     List<Location> locs = referenceType.allLineLocations();
                     for (Location loc : locs) {
-                        System.out.println("allowed breakpoints: " + loc);
                         if (loc.lineNumber() == lineNumber) {
                             breakpointLocation = loc;
                             break;
@@ -66,7 +64,6 @@ public class JDIClient {
                 System.out.printf("No breakpoint allowed at %s:%s\n", fullyQualifiedClassName, lineNumber);
                 System.exit(0);
             }
-            System.out.println(breakpointLocation);
 
             if (breakpointLocation != null) {
                 EventRequestManager evtReqMgr = vm.eventRequestManager();
@@ -84,7 +81,7 @@ public class JDIClient {
                             if (evtReq instanceof BreakpointRequest) {
                                 BreakpointRequest bpReq = (BreakpointRequest) evtReq;
                                 if (bpReq.location().lineNumber() == lineNumber) {
-                                    System.out.println("Breakpoint at line " + lineNumber + ": ");
+                                    System.out.print("Breakpoint at line " + lineNumber + ": ");
                                     BreakpointEvent brEvt = (BreakpointEvent) evt;
                                     ThreadReference threadRef = brEvt.thread();
                                     StackFrame stackFrame = threadRef.frame(0);
