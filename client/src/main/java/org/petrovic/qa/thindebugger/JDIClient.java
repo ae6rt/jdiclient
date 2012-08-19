@@ -54,6 +54,7 @@ public class JDIClient {
                     System.out.println(referenceType.name());
                     List<Location> locs = referenceType.allLineLocations();
                     for (Location loc : locs) {
+//                        System.out.println("loc: " + loc);
                         if (loc.lineNumber() == lineNumber) {
                             breakpointLocation = loc;
                             break;
