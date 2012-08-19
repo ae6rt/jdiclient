@@ -1,4 +1,4 @@
-package com.xoom.qa.thindebugger;
+package com.example.qa.thindebugger;
 
 import com.sun.jdi.*;
 import com.sun.jdi.connect.AttachingConnector;
@@ -11,6 +11,9 @@ import com.sun.jdi.request.EventRequestManager;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * From http://wayne-adams.blogspot.com/2011/10/generating-minable-event-stream-with.html
+ */
 public class JDIClient {
     public static void main(String[] args) throws Exception {
         if (args.length != 4) {

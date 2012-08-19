@@ -1,13 +1,13 @@
-package com.xoom.qa.thindebugger;
+package com.xoom.qa.tdt;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Unit test for simple JDIClient.
+ * Unit test for simple App.
  */
-public class JDIClientTest
+public class AppTest 
     extends TestCase
 {
     /**
@@ -15,7 +15,7 @@ public class JDIClientTest
      *
      * @param testName name of the test case
      */
-    public JDIClientTest(String testName)
+    public AppTest( String testName )
     {
         super( testName );
     }
@@ -25,7 +25,7 @@ public class JDIClientTest
      */
     public static Test suite()
     {
-        return new TestSuite( JDIClientTest.class );
+        return new TestSuite( AppTest.class );
     }
 
     /**
