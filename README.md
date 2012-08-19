@@ -5,6 +5,8 @@ Inspired by [Wayne Adams blog post](http://wayne-adams.blogspot.com/2011/10/gene
 
 This lab project consists of two parts:  a target app running in its VM with debugging enabled and a client debugger app that connects to the target app VM.
 
+[Java Debugger Interface javadoc](http://docs.oracle.com/javase/1.5.0/docs/guide/jpda/jdi/index.html)
+
 Start the target app
 --------------------
 
