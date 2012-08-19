@@ -1,4 +1,4 @@
-package com.example.qa.thindebugger;
+package org.petrovic.qa.thindebugger;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

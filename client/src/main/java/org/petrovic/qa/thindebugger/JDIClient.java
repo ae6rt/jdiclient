@@ -1,4 +1,4 @@
-package com.example.qa.thindebugger;
+package org.petrovic.qa.thindebugger;
 
 import com.sun.jdi.*;
 import com.sun.jdi.connect.AttachingConnector;

@@ -1,4 +1,4 @@
-package com.xoom.qa.tdt;
+package org.petrovic.qa.tdt;
 
 import java.util.Random;
 

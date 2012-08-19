@@ -1,4 +1,4 @@
-package com.xoom.qa.tdt;
+package org.petrovic.qa.tdt;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
