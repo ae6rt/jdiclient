@@ -1,7 +1,7 @@
 Simple JDI client
 =================
 
-Inspired by [Wayne Adams blog post](http://wayne-adams.blogspot.com/2011/10/generating-minable-event-stream-with.html).
+This is a simple Java Debugger Interface example.  It is inspired by [Wayne Adams blog post](http://wayne-adams.blogspot.com/2011/10/generating-minable-event-stream-with.html).
 
 This lab project consists of two parts:  a target app running in its VM with debugging enabled and a client debugger app that connects to the target app VM.
 
