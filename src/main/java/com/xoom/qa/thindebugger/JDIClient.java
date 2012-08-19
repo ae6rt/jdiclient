@@ -13,13 +13,14 @@ import java.util.Map;
 
 public class JDIClient {
     public static void main(String[] args) throws Exception {
-        if (args.length != 3) {
-            System.out.println("Usage:  java JDIDemo debugPortNumber sourceLineNumber variableName");
+        if (args.length != 4) {
+            System.out.println("Usage:  java JDIDemo debugPortNumber sourceLineNumber fqclassName variableName");
             System.exit(-1);
         }
         int debugPort = Integer.parseInt(args[0]);
         int lineNumber = Integer.parseInt(args[1]);
-        String varName = args[2];
+        String fullyQualifiedClassName = args[2];
+        String varName = args[3];
 
         VirtualMachineManager vmMgr = Bootstrap.virtualMachineManager();
         AttachingConnector socketConnector = null;
@@ -34,25 +35,34 @@ public class JDIClient {
 
         if (socketConnector != null) {
             Map paramsMap = socketConnector.defaultArguments();
+            Connector.StringArgument hostArg = (Connector.StringArgument) paramsMap.get("hostname");
+            hostArg.setValue("localhost");
             Connector.IntegerArgument portArg = (Connector.IntegerArgument) paramsMap.get("port");
             portArg.setValue(debugPort);
             VirtualMachine vm = socketConnector.attach(paramsMap);
             System.out.println("Attached to process '" + vm.name() + "'");
+            System.out.println("Attached to description '" + vm.description() + "'");
+            System.out.println("Attached to version '" + vm.version() + "'");
 
             List<ReferenceType> refTypes = vm.allClasses();
             Location breakpointLocation = null;
-            for (ReferenceType refType : refTypes) {
-                if (breakpointLocation != null) {
-                    break;
-                }
-                List<Location> locs = refType.allLineLocations();
-                for (Location loc : locs) {
-                    if (loc.lineNumber() == lineNumber) {
-                        breakpointLocation = loc;
-                        break;
+            for (ReferenceType referenceType : refTypes) {
+                if (referenceType.name().equals(fullyQualifiedClassName)) {
+                    System.out.println(referenceType.name());
+                    List<Location> locs = referenceType.allLineLocations();
+                    for (Location loc : locs) {
+                        if (loc.lineNumber() == lineNumber) {
+                            breakpointLocation = loc;
+                            break;
+                        }
                     }
                 }
             }
+            if (breakpointLocation == null) {
+                System.out.printf("No breakpoint allowed at %s:%s\n", fullyQualifiedClassName, lineNumber);
+                System.exit(0);
+            }
+            System.out.println(breakpointLocation);
 
             if (breakpointLocation != null) {
                 EventRequestManager evtReqMgr = vm.eventRequestManager();
@@ -96,7 +106,6 @@ public class JDIClient {
                     }
                 }
             }
-
         }
     }
 }
